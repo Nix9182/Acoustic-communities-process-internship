@@ -10,9 +10,11 @@ tdist=function(file){## File: file name with time stamps
   sound.dist <- data.frame(matrix(ncol = dim(sound.types)[1], nrow = dim(sound.types)[1]))
   all.dist <- c()
   overlap.perc <- c()
+  all.overlap.perc <- c()
   event_id <- c()
   focal_id <- c()
   neighbour_id <- c()
+  all_neighbour <- c()
   for (i in 1:dim(sound.types)[1]){
     Ti_1 <- sound.types[i,1] #start time of referential event 
     Ti_2 <- sound.types[i,2]
@@ -21,37 +23,51 @@ tdist=function(file){## File: file name with time stamps
       Tj_1 <- sound.types[j,1] #start time of the compared event
       Tj_2 <- sound.types[j,2]
       b <- formatC(j, digits=2,flag="0")
+      all_focal <- append(all_focal, paste(sound.types[i,3], file, a, sep='_'))
+      all_neighbour <- append(all_neighbour, paste(sound.types[j,3], file, b, sep='_'))
       if (Tj_2<Ti_1){
         sound.dist[i,j] <- Tj_2-Ti_1
+        all.dist <- append(all.dist, Tj_2-Ti_1)
+        all.overlap.perc <- append(all.overlap.perc, 0)
       }
       else if (Ti_2<Tj_1){
         sound.dist[i,j] <- Tj_1-Ti_2
+        all.dist <- append(all.dist, Tj_1-Ti_2)
+        all.overlap.perc <- append(all.overlap.perc, 0)
       }
        else if ((Tj_1<=Ti_1) & (Ti_1<=Tj_2) & (Tj_2<=Ti_2)) {#i begins during j and ends after j
          sound.dist[i,j] <- 0
+         all.dist <- append(all.dist, 0)
          overlap <- 100*(Tj_2-Ti_1)/(Ti_2-Ti_1)
          overlap.perc <- append(overlap.perc, overlap)
+         all.overlap.perc <- append(all.overlap.perc, overlap)
          focal_id <- append(focal_id, paste(sound.types[i,3], file, a, sep='_'))
          neighbour_id <- append(neighbour_id, paste(sound.types[j,3], file, b, sep='_'))
        }
        else if ((Ti_1<=Tj_1) & (Tj_1<=Ti_2) & (Ti_2<=Tj_2)){#i begins before j and ends during j
          sound.dist[i,j] <- 0
+         all.dist <- append(all.dist, 0)
          overlap <- 100*(Ti_2-Tj_1)/(Ti_2-Ti_1)
          overlap.perc <- append(overlap.perc, overlap)
+         all.overlap.perc <- append(all.overlap.perc, overlap)
          focal_id <- append(focal_id, paste(sound.types[i,3], file, a, sep='_'))
          neighbour_id <- append(neighbour_id, paste(sound.types[j,3], file, b, sep='_'))
        }
        else if ((Ti_1<=Tj_1) & (Tj_1<=Ti_2) & (Ti_1<=Tj_2) & (Tj_2<=Ti_2)) {#j begins and ends during i
          sound.dist[i,j] <- 0
+         all.dist <- append(all.dist, 0)
          overlap <- 100*(Tj_2-Tj_1)/(Ti_2-Ti_1)
          overlap.perc <- append(overlap.perc, overlap)
+         all.overlap.perc <- append(all.overlap.perc, overlap)
          focal_id <- append(focal_id, paste(sound.types[i,3], file, a, sep='_'))
          neighbour_id <- append(neighbour_id, paste(sound.types[j,3], file, b, sep='_'))
         }
        else if ((Tj_1<=Ti_1) & (Ti_1<=Tj_2) & (Tj_1<=Ti_2) & (Ti_2<=Tj_2)) {#i beings and ends during j
          sound.dist[i,j] <- 0
+         all.dist <- append(all.dist, 0)
          overlap <- 100
          overlap.perc <- append(overlap.perc, overlap)
+         all.overlap.perc <- append(all.overlap.perc, overlap)
          focal_id <- append(focal_id, paste(sound.types[i,3], file, a, sep='_'))
          neighbour_id <- append(neighbour_id, paste(sound.types[j,3], file, b, sep='_'))
        }
@@ -61,6 +77,7 @@ tdist=function(file){## File: file name with time stamps
     #names(sound.dist)[dim(sound.types)[1]+1] <- "event_id"
   }
   sound.dist <- data.frame(event_id, sound.dist)
+  all.dist <- data.frame(all_focal,all_neighbour,all.dist,all.overlap.perc)
   overlap.perc <- data.frame(focal_id,neighbour_id,overlap.perc)
   #return(sound.dist)
   return(list(sound.dist = sound.dist, overlap.perc = overlap.perc, all.dist = all.dist))
@@ -68,6 +85,7 @@ tdist=function(file){## File: file name with time stamps
 
 # df1_dist <- data.frame(tdist(file1)$sound.dist)
 # df1_overlap <- data.frame(tdist(file1)$overlap.perc)
+# df1_all <- data.frame(tdist(file1)$all.dist)
 # df2_dist <- tdist(file2)$sound.dist
 # df2_overlap <- data.frame(tdist(file2)$overlap.perc)
 # library(tidyverse)
