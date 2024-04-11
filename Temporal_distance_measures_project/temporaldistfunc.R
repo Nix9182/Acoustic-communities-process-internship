@@ -8,6 +8,7 @@ tdist=function(file){## File: file name with time stamps
   sound.types <- read.table(file, dec=',')
   sound.types[,3] <- formatC(sound.types[,3], digits=2,flag="0")
   sound.dist <- data.frame(matrix(ncol = dim(sound.types)[1], nrow = dim(sound.types)[1]))
+  overlap.perc <- data.frame(matrix(ncol = 0, nrow = 0))
   event_id <- c()
   for (i in 1:dim(sound.types)[1]){
     Ti_1 <- sound.types[i,1] #start time of referential event 
@@ -22,8 +23,24 @@ tdist=function(file){## File: file name with time stamps
       else if (Ti_2<Tj_1){
         sound.dist[i,j] <- Tj_1-Ti_2
       }
-      else {
+      #else {
+        #sound.dist[i,j] <- 0
+      #}
+      else if ((Tj_1<Ti_1) & (Ti_1<Tj_2) & (Tj_2<Ti_2)) {#i begins during j and ends after j
         sound.dist[i,j] <- 0
+        #overlap <- 100*(Tj_2-Ti_1)/(Ti_2-Ti_1)
+      }
+      else if ((Ti_1<Tj_1) & (Tj_1<Ti_2) & (Ti_2<Tj_2)){#i begins before j and ends during j
+        sound.dist[i,j] <- 0
+        #overlap <- 100*(Ti_2-Tj_1)/(Ti_2-Ti_1)
+      }
+      else if ((Ti_1<Tj_1) & (Tj_1<Ti_2) & (Ti_1<Tj_2) & (Tj_2<Ti_2)) {#j begins and ends during i
+        sound.dist[i,j] <- 0
+        #overlap <- 100*(Tj_2-Tj_1)/(Ti_2-Ti_1)
+      }
+      else if ((Tj_1<Ti_1) & (Ti_1<Tj_2) & (Tj_1<Ti_2) & (Ti_2<Tj_2)) {#i beings and ends during j
+        sound.dist[i,j] <- 0
+        #overlap <- 100
       }
     }
     event_id <- append(event_id, paste(sound.types[i,3], file, a, sep='_'))
