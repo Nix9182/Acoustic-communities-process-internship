@@ -10,7 +10,7 @@ for (i in site){
   for (j in channel){
     setwd(paste("C:/Users/cobod/OneDrive/Bureau/Master BEE MNHN/Stage M1 Ecoacoustique/Données/files/", i, "/", j, sep=""))
     for (k in list.files(pattern="*[0-9]$")){
-      df_k <- tdist(k)
+      df_k <- data.frame(tdist(k)$all.dist)
       df_tot<-bind_rows(df_tot, df_k)
     }
   }
