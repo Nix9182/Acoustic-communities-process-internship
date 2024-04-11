@@ -1,4 +1,3 @@
-
 library(tidyverse)
 
 source("C:/Users/cobod/OneDrive/Bureau/Ecoacoustic project internship/Acoustic-communities-process-internship/Temporal_distance_measures_project/temporaldistfunc.R")
@@ -9,13 +8,10 @@ df_tot <- data.frame(matrix(ncol = 0, nrow = 0))
 
 for (i in site){
   for (j in channel){
-    #setwd(paste("C:/Users/cobod/OneDrive/Bureau/Master BEE MNHN/Stage M1 Ecoacoustique/Donn?es/files/", i, "/", j, sep=""))
-    #setwd(file.path("C:", "Users", "cobod", "OneDrive","Bureau","Master BEE MNHN","Stage M1 Ecoacoustique","Donn?es","files",i,j))
+    setwd(paste("C:/Users/cobod/OneDrive/Bureau/Master BEE MNHN/Stage M1 Ecoacoustique/Données/files/", i, "/", j, sep=""))
     for (k in list.files(pattern="*[0-9]$")){
       df_k <- tdist(k)
-      df_tot<-bind_rows(df_tot1, df_k)
+      df_tot<-bind_rows(df_tot, df_k)
     }
   }
 }
-getwd()
-
