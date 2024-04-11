@@ -14,6 +14,7 @@ tdist=function(file){## File: file name with time stamps
   event_id <- c()
   focal_id <- c()
   neighbour_id <- c()
+  all_focal <- c()
   all_neighbour <- c()
   for (i in 1:dim(sound.types)[1]){
     Ti_1 <- sound.types[i,1] #start time of referential event 
