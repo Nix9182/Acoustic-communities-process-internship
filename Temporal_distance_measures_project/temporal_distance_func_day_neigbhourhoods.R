@@ -37,3 +37,13 @@ infoday = function(path, site, channel){
 
 df_info <- data.frame(infoday(path, site, channel))
 
+#Function to get distance between 2 records
+tdistday = function(data_info, id_focal, id_neigh){
+  index_focal <- which(data_info$id== id_focal)
+  index_neigh <- which(data_info$id== id_neigh)
+  time_focal <- data_info$hour[index_focal]
+  time_neigh <- data_info$hour[index_neigh]
+  distance <- time_neigh-time_focal
+  
+  return(distance)
+}
