@@ -47,3 +47,6 @@ tdistday = function(data_info, id_focal, id_neigh){
   
   return(distance)
 }
+
+tdistday(df_info, "021_L_BEARAV_20140620_100000_001", "058_L_BEARAV_20140620_090000_028")
+tdistday(df_info, "058_L_BEARAV_20140620_090000_028", "021_L_BEARAV_20140620_100000_001")
