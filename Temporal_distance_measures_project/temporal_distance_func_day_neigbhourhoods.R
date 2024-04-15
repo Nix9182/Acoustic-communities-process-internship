@@ -4,21 +4,21 @@ site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')
 channel <- c('left', 'right')
 
 #Function to get meta info on all sounds
+
 infoday = function(path, site, channel){
-  recording_w_types <- c()
-  site_list <- c()
-  channel_list <- c()
-  date_list <- c()
-  hour_list <-c()
   sound.info <- data.frame(matrix(ncol = 0, nrow = 0))
+  
   for (i in site){
     for (j in channel){
       setwd(paste(path,"/", i, "/", j, sep=""))
+      
       for (k in list.files(pattern="*[0-9]$")){
         sound.types <- read.table(k, dec=',')
         sound.types[,3] <- formatC(sound.types[,3], digits=2,flag="0")
-        date <-strsplit(k, "_")[[1]][3]
-        hour <-substr(strsplit(k, "_")[[1]][4], 1, 2)
+        info_split <- strsplit(k, "_")[[1]]
+        date <- info_split[3]
+        hour <-substr(info_split[4], 1, 2)
+        
         for (l in 1:dim(sound.types)[1]){
           a <- formatC(l, digits=2,flag="0")
           type <- sound.types[l,3]
@@ -35,9 +35,11 @@ infoday = function(path, site, channel){
   return(sound.info)
 }
 
+
 df_info <- data.frame(infoday(path, site, channel))
 
-#Function to get distance between 2 records
+#Function to get distance between 2 recordings
+
 tdistday = function(data_info, id_focal, id_neigh){
   index_focal <- which(data_info$id== id_focal)
   index_neigh <- which(data_info$id== id_neigh)
