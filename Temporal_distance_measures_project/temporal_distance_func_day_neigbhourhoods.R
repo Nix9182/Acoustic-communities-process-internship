@@ -34,3 +34,6 @@ infoday = function(path, site, channel){
   }
   return(sound.info)
 }
+
+df_info <- data.frame(infoday(path, site, channel))
+
