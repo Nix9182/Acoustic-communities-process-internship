@@ -24,3 +24,11 @@ FUN1_getNeigh = function(releves, channel, site, date, no.neigh)
  return(pin.neigh[pin.neigh$L %in% c(no.neigh), ])
  
 }
+
+channel = "left"
+site = "BEARAV"
+date = "20140620"
+no.neigh = -4:4
+
+test.Neigh = FUN1_getNeigh(Acous.releves, channel, site, date, no.neigh)
+
