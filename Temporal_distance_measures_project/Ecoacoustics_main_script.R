@@ -38,3 +38,11 @@ for(i in folders){
   }
 }
 
+#############################################################################################################
+## I. PREPARATION OF DATA
+#############################################################################################################
+
+## A. Load traits data ------------------------------------------------------------------
+Acous.measures = read.csv("C:/Users/cobod/OneDrive/Bureau/Ecoacoustic project internship/Acoustic-communities-process-internship/Temporal_distance_measures_project/mesures_soundtypes_updated.csv", sep=";", dec=",")
+
+
