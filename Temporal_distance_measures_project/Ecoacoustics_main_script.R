@@ -99,3 +99,9 @@ list.acousdist = list(duration = distduration,
                  dom_freq= distdom_freq
                  )
 
+## Build the regional soundtype pool per traits
+# We avoid selecting the soundtype with no trait information.
+list.acouspool = list(duration = tr.st_names[tr.st_names %in% Acous.traits$sound_type[which(!is.na(Acous.traits$duration))]],
+                 dom_freq = tr.st_names[tr.st_names %in% Acous.traits$sound_type[which(!is.na(Acous.traits$dom_freq))]])
+
+
