@@ -6,13 +6,13 @@ fun_gaussianizeTraits = function(traitdata, traits, setype)
       tab = traitdata[, tr, drop = FALSE] %>% drop_na()
       res = Gaussianize(tab, return.u = TRUE, type = setype)
       colnames(res) = tr
-      res[["refNamePin"]] = rownames(res)
+      res[["sound_type"]] = rownames(res)
       return(res)
     }
-  traitdata_G = traitdata_G %>% reduce(full_join, by = "refNamePin")
+  traitdata_G = traitdata_G %>% reduce(full_join, by = "sound_type")
   
-  sp.names = traitdata[, "refNamePin", drop = FALSE]
-  RES = merge(sp.names, traitdata_G, by = "refNamePin", all = TRUE)
-  rownames(RES) = RES[, "refNamePin"]
+  st.names = traitdata[, "sound_type", drop = FALSE]
+  RES = merge(st.names, traitdata_G, by = "sound_type", all = TRUE)
+  rownames(RES) = RES[, "sound_type"]
   return(RES)
 }
