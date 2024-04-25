@@ -130,3 +130,26 @@ Acous.releves <- foreach(c=channel, .combine=rbind)%do%{
 ## Get sountype names in releves
 ab.st_names = unique(Acous.releves$type)
 ab.st_no = length(ab.st_names)
+
+## C. Prepare the moving window structure for each day --------------------------------
+# This is to be able to determine the neighborhoods. 
+#Day1 = fun_consGrid("Day1")  #Work in progress
+
+## D. Create random communities per species ---------------------------------------------
+
+## Amount of random communities wanted (SES calculations)
+# We would normally need more but increase the numbers depending on your computer.
+no.rand = 5 # Before increasing this number to 50 (previously it was 5) let's discuss this during the lecture. 
+
+## Create the test and random soundtypes list at once
+# We randomize the observed soundtypes "no.rand" times to create the null neighborhoods.
+list.acouscomrand = foreach(tr.dim = c("duration","dom_freq")) %do% {
+  res = foreach(i = 1:no.rand, .combine = "cbind") %do% {
+    sample(list.acouspool[[tr.dim]], size = ab.st_no, replace = FALSE)
+  }
+  res = data.frame(Obs = ab.st_names, res)
+  colnames(res) = c("Obs", paste0("Null_", 1:no.rand))
+  rownames(res) = res$Obs
+  return(res)
+}
+names(list.acouscomrand) = c("duration","dom_freq")
