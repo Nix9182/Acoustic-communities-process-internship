@@ -105,3 +105,28 @@ list.acouspool = list(duration = tr.st_names[tr.st_names %in% Acous.traits$sound
                  dom_freq = tr.st_names[tr.st_names %in% Acous.traits$sound_type[which(!is.na(Acous.traits$dom_freq))]])
 
 
+## B. Gather surveys data -----------------------------------------------------------------
+#Create the releves table (with nobs)
+# Columns of interest: 
+# channel: left or right hydrophone
+# site: site of recording
+# date: date of the recording
+# hour: hour of the recording (=pinpoint)
+# type: soundtype
+# nbobs: Abundances
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')
+channel <- c('left', 'right')
+
+Acous.info <- data.frame(infoday(path, site, channel))
+
+Acous.releves <- foreach(c=channel, .combine=rbind)%do%{
+  foreach(s=site, .combine=rbind)%do%{
+    foreach(d=unique(Acous.info$date), .combine=rbind)%do%{
+      fun_getUniqueSt(Acous.info, c, s, d)
+    }
+  }
+}
+
+## Get sountype names in releves
+ab.st_names = unique(Acous.releves$type)
+ab.st_no = length(ab.st_names)
