@@ -1,5 +1,5 @@
 
-path <- "C:/Users/cobod/OneDrive/Bureau/Master BEE MNHN/Stage M1 Ecoacoustique/DonnÃ©es/files/"
+path <- "C:/Users/cobod/OneDrive/Bureau/Master BEE MNHN/Stage M1 Ecoacoustique/Données/files/"
 site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')
 channel <- c('left', 'right')
 
@@ -36,19 +36,37 @@ infoday = function(path, site, channel){
 }
 
 
-df_info <- data.frame(infoday(path, site, channel))
+Acous.info <- data.frame(infoday(path, site, channel))
 
-#Function to get distance between 2 recordings
 
-tdistday = function(data_info, id_focal, id_neigh){
-  index_focal <- which(data_info$id== id_focal)
-  index_neigh <- which(data_info$id== id_neigh)
-  time_focal <- data_info$hour[index_focal]
-  time_neigh <- data_info$hour[index_neigh]
-  distance <- time_neigh-time_focal
+#############################################################################################################
+#Function to get list of unique soundtypes in each recording (pinpoint observation) 
+fun_getUniqueSt = function(data_info, channel, site, date, hour){
+  df_set <- data_info[data_info$channel == channel 
+                      & data_info$site == site 
+                      & data_info$date == date,]
   
-  return(distance)
+  unique_st = foreach(h= 0:(length(unique(df_set$hour))-1), .combine = rbind)%do%{
+    {
+      table_set <-table(df_set[df_set$hour == h,]$type)
+      df_table <- as.data.frame(table_set)
+      df_table <- cbind(channel = rep(channel,length(df_table[,1])),
+                        site = rep(site,length(df_table[,1])),
+                        date = rep(date,length(df_table[,1])),
+                        hour=rep(h,length(df_table[,1])), 
+                        df_table)
+      return(df_table)
+    }
+  
+  }
+  colnames(unique_st)[c(5,6)] <- c("type", "nb_of_obs")
+    
+  if(missing(hour)){
+    return(unique_st)
+  }
+  
+  else {
+    return(unique_st[unique_st$hour == hour, ])
+  }
 }
 
-tdistday(df_info, "021_L_BEARAV_20140620_100000_001", "058_L_BEARAV_20140620_090000_028")
-tdistday(df_info, "058_L_BEARAV_20140620_090000_028", "021_L_BEARAV_20140620_100000_001")
