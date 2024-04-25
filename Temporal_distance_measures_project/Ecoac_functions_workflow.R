@@ -49,7 +49,7 @@ FUN3_getAcousMetrics = function(df.neigh, traits, list.acousdist, list.acouscomr
       list.neigh.dist <- c(list.neigh.dist,list.acousdist[[tr.dim]][fst,nst]) 
     }
     df.neigh.dist <- cbind(df.neigh.dist,list.neigh.dist)
-    colnames(df.neigh.dist)[ncol(df.neigh.dist)] <- paste0("dist_", tr.dim)
+    colnames(df.neigh.dist)[ncol(df.neigh.dist)] <- paste0("Obs_dist_", tr.dim)
   }
   return(df.neigh.dist)
 }

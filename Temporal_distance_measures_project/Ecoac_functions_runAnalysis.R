@@ -13,22 +13,31 @@ fun_getRandAcousComm = function(neighdf, traits, list.acouscomrand, no.rand, lis
     {
       acouscomrand = list.acouscomrand[[tr.dim]] #list of randomized pool for one trait
       rownames(acouscomrand) <- acouscomrand[, "Obs"]
-      tr.df = neighdf[,c("fh","nh","L","fst","nst", paste0("dist_", tr.dim))]
+      tr.df = neighdf[,c("fh","nh","L","fst","nst", paste0("Obs_dist_", tr.dim))]
       list.names <-c()
       ## Get 'random' focal species for each null community associated to OBSERVED focal species
-      Null_com = foreach(h= 1:no.rand, .combine=cbind) %do%{
-        name_list = c(paste0("Null_fst_", h),paste0("Null_nst_", h))
+      Null_com = foreach(h= 1:no.rand, .combine=cbind) %do% 
+      {
+        name = paste0("Null_nst_", h)
+        name.dist = paste0("Null_dist_", h)
         
-        rand_fst.list= foreach(fst= fst_init, .combine=rbind)  %do% {
-          rand_fst = acouscomrand[fst, paste0("Null_", h)]
-        }
-        
-        rand_nst.list = foreach(nst= nst_init, .combine=rbind)  %do%{
+        rand_nst.list = foreach(nst= nst_init, .combine=rbind)  %do% 
+        {
           rand_nst = acouscomrand[nst, paste0("Null_", h)] 
         }
-        list.names <- c(list.names, paste0("Null_fst_", h), paste0("Null_nst_", h))
-        Null_dfx <- as.data.frame(cbind(rand_fst.list, rand_nst.list))
         
+        rand.dist <- foreach(i=1:length(fst_init)) %do% 
+        {
+          fst = as.character(fst_init[i])
+          nst = as.character(rand_nst.list[i])
+          neigh.dist <- list.acousdist[[tr.dim]][fst,nst]
+        }
+        
+        
+        list.names <- c(list.names, name, name.dist)
+        Null_dfx <- cbind(rand_nst.list, rand.dist)
+        
+        return(Null_dfx)
         
       }
       # tr.df <- cbind(tr.df, rand_fst = rand_fst.list, rand_nst = rand_nst.list)
