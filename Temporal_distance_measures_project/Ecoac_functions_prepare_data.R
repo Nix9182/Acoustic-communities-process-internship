@@ -49,4 +49,9 @@ infoday = function(path, site, channel){
   }
   return(sound.info)
 }
+
+
+Acous.info <- data.frame(infoday(path, site, channel))
+
+
 }
