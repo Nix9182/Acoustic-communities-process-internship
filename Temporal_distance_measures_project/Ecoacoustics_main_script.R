@@ -83,3 +83,19 @@ ggplot(ggdata, aes(x = value)) +
 
 res = Acous.traits[, names(tr_names)] %>% drop_na()
 corrplot(cor(res))
+
+## Calculate distances between sound types for each trait
+# We calculate the differences between each soundtype for all traits at once to gain time.
+# For each focal and neighbor, we will later call these differences.
+for (tr in traits_names){
+  df = as.data.frame(Acous.traits[, tr, drop = FALSE]) #df with only one trait (one column) with species names as index (keeps only one trait in Acous.traits)
+  dist_tr = outer(df[, 1], df[, 1], "-") #outputs a data frame resulting of the difference between all species (all combinations possible)
+  colnames(dist_tr) = rownames(dist_tr) = rownames(df)
+  assign(x = paste0("dist", tr), value = dist_tr) #each distTRAIT for ex: distSLA, get assigned the distance df for this trait
+}
+
+## Gather all distances
+list.acousdist = list(duration = distduration,
+                 dom_freq= distdom_freq
+                 )
+
