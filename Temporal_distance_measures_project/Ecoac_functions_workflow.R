@@ -15,13 +15,13 @@ FUN1_getNeigh = function(releves, channel, site, date, no.neigh)
      focal.types = day.rel[day.rel$hour == fh,]$type
      neigh.types = day.rel[day.rel$hour == nh,]$type
      L <- nh-fh
-     RES <- expand.grid(fst= focal.types, nst= neigh.types)
+     RES <- expand.grid(nst= neigh.types, fst= focal.types)
      RES <- cbind(fh=rep(fh, length(RES$fst)),nh=rep(nh, length(RES$fst)), RES, L=rep(L, length(RES$fst)))
      pin.test <- rbind(pin.test,RES)
    }
    pin.neigh <- rbind(pin.neigh, pin.test)
  }
- return(pin.neigh[pin.neigh$L %in% c(no.neigh), ])
+ return(pin.neigh[pin.neigh$L %in% c(no.neigh), c('fh','nh','fst','nst','L') ]) #to keep levels wanted and intervert place of fst and nst for more readability
  
 }
 
