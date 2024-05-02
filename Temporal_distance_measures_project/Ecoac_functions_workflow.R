@@ -34,7 +34,7 @@ test.Neigh = FUN1_getNeigh(Acous.releves, channel, site, date, no.neigh)
 
 #############################################################################################################
 ## NO Function to get sub-neighborhoods, null communities and SES calculations for a given focal individual
-FUN3_getAcousMetrics = function(df.neigh, traits, list.acousdist, list.acouscomrand, list.acouspool)
+FUN2_getAcousMetrics = function(df.neigh, traits, list.acousdist, list.acouscomrand, list.acouspool)
 {
   ## Get all null communities 
   # randNull = fun_getRandComm(abundx = abundf, focalsp = focalsp, list.comrand = list.comrand, no.rand = no.rand, list.pool = list.pool)
@@ -54,6 +54,44 @@ FUN3_getAcousMetrics = function(df.neigh, traits, list.acousdist, list.acouscomr
   return(df.neigh.dist)
 }
 
-###Test
-traits <- c("duration", "dom_freq")
-new.Neigh <- FUN3_getAcousMetrics(test.Neigh, traits, list.acousdist, list.acouscomrand, list.acouspool)
+#############################################################################################################
+## GLOBAL function 
+#############################################################################################################
+
+#takes ~3:40 for one site all days
+
+
+FUNCTION_Comm = function(channel, site, releves
+                         , list.comrand, no.neigh
+                         , traits, list.dist, list.pool, focus)
+{
+    dates <- unique(releves[releves$site==site,]$date)
+    
+    df_SES_dates = foreach(d=dates)%do%{
+      ## Get grid numbers for day window
+      df_winNum = FUN1_getNeigh(releves, channel, site, date=d, no.neigh)
+      
+      ## Get observed distance for each trait 
+      df_obs_dist = FUN2_getAcousMetrics(df_winNum, traits, list.acousdist, list.acouscomrand, list.acouspool)
+      
+      ## Get null communities, mean distances and sd
+      df_rand_comm = fun_getRandAcousComm(df_obs_dist, traits, list.acouscomrand, no.rand, list.acouspool)
+      
+      ## Get SES calculations
+      df_SES = FUN_calcSes(df_rand_comm) 
+      
+    }
+    names(df_SES_dates) <- dates
+    ## --------------------------------------------------------------------------------------
+    
+    df_organized = foreach(tr.dim=traits)%do%{
+      df_trait = foreach(d=dates, .combine=rbind)%do%{
+        df_SES_dates[[d]][[tr.dim]]
+      
+      }
+    }
+  
+  names(df_organized) <- traits
+  
+  return(df_organized)
+}
