@@ -67,7 +67,10 @@ Acous.traits = Acous.traits %>%
   mutate_at(traits_names, log) %>%
   mutate_at(traits_names, as.numeric)
 rownames(Acous.traits) = Acous.traits$sound_type
-Acous.traits = fun_gaussianizeTraits(Acous.traits, traits_names, setype = "hh")
+
+Acous.traits$duration <- scale(Acous.traits$duration)
+Acous.traits$dom_freq <- scale(Acous.traits$dom_freq)
+#Acous.traits = fun_gaussianizeTraits(Acous.traits, traits_names, setype = "hh")
 
 ## Check trait distributions and trait space with a PCA
 tr_names = c(duration = "Duration",
@@ -78,7 +81,7 @@ ggplot(ggdata, aes(x = value)) +
   facet_grid(.~variable, scales = "free_x") +
   geom_histogram(alpha = 0.5) +
   theme_bw() +
-  xlab("Log and gaussian transformed trait values") +
+  xlab("Log-transformed and scaled trait values") +
   labs(fill = "Acoustic traits")
 
 res = Acous.traits[, names(tr_names)] %>% drop_na()
@@ -131,11 +134,8 @@ Acous.releves <- foreach(c=channel, .combine=rbind)%do%{
 ab.st_names = unique(Acous.releves$type)
 ab.st_no = length(ab.st_names)
 
-## C. Prepare the moving window structure for each day --------------------------------
-# This is to be able to determine the neighborhoods. 
-#Day1 = fun_consGrid("Day1")  #Work in progress
 
-## D. Create random communities per species ---------------------------------------------
+## C. Create random communities per species ---------------------------------------------
 
 ## Amount of random communities wanted (SES calculations)
 # We would normally need more but increase the numbers depending on your computer.
