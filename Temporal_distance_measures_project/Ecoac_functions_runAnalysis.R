@@ -1,37 +1,33 @@
-## IN PROGRESS Function to create the random neighborhoods for each focal indvidual given the list.comrand.
+## YES Function to create the random neighborhoods for each focal indvidual given the list.comrand and get differences and means
 fun_getRandAcousComm = function(neighdf, traits, list.acouscomrand, no.rand, list.acouspool)
 {
   
   ## Get OBSERVED focal and neighbor soundtype in the initial releve
-  fst_init = neighdf$fst
-  nst_init = neighdf$nst #soundtypes in the neighborhoods
-  L_init = neighdf$L
-  
-  #I want to cbind the random focal and neigh st lists to the original df with the observed st
-  #Null_comAll = list()
-  Null_comAll <- foreach(tr.dim= traits)%do%
+  Null_comMeans <- foreach(tr.dim= traits)%do%
     {
+      Null_comMetrics = NULL
       acouscomrand = list.acouscomrand[[tr.dim]] #list of randomized pool for one trait
       rownames(acouscomrand) <- acouscomrand[, "Obs"]
-      tr.df = neighdf[,c("fh","nh","L","fst","nst", paste0("Obs_dist_", tr.dim))]
-      list.names <-c()
+      tr.df = neighdf[neighdf$fst!=neighdf$nst ,c("fh","nh","L","fst","nst", paste0("Obs_dist_", tr.dim))]
+      colnames(tr.df)[colnames(tr.df)==paste0("Obs_dist_", tr.dim)] <- "Obs_dist"
+      list.names <-c(colnames(tr.df), 'Null_mean_all', 'Null_sd_all')
+      
       ## Get 'random' focal species for each null community associated to OBSERVED focal species
-      Null_com = foreach(h= 1:no.rand, .combine=cbind) %do% 
+      Null_means = foreach(h= 1:no.rand, .combine=cbind) %do% 
         {
           name = paste0("Null_nst_", h)
           name.dist = paste0("Null_dist_", h)
           name.mean = paste0("Null_mean_", h)
-          name.sd = paste0("Null_sd_", h)
-          list.names <- c(list.names,name,name.dist,name.mean, name.sd)
+          list.names <- c(list.names, name, name.dist, name.mean)
          
           
           #--------------------------------------------------------------------------------- 
-          rand_nst.list = foreach(nst= nst_init, .combine=rbind)  %do% 
+          rand_nst.list = foreach(nst= tr.df$nst, .combine=rbind)  %do% 
             {
               rand_nst = acouscomrand[nst, paste0("Null_", h)] 
             }
           #---------------------------------------------------------------------------------
-          rand.dist = foreach(i=1:length(fst_init), .combine=rbind) %do% 
+          rand.dist = foreach(i=1:length(tr.df$fst), .combine=rbind) %do% 
             {
               fst = as.character(fst_init[i])
               nst = as.character(rand_nst.list[i])
@@ -41,42 +37,36 @@ fun_getRandAcousComm = function(neighdf, traits, list.acouscomrand, no.rand, lis
           #---------------------------------------------------------------------------------
           transit.dfx = cbind(tr.df[,c("fh","L","fst")], rand_nst.list, rand.dist)
           
-          all.metrics = foreach(fh=unique(transit.dfx$fh), .combine=rbind) %do%
+          all.means = foreach(fh=unique(transit.dfx$fh), .combine=rbind) %do%
             {
               sub.df.fh = transit.dfx[transit.dfx$fh == fh,]
               
-              L.mean = foreach(L=unique(sub.df.fh$L), .combine=rbind) %do%
+              L.metrics = foreach(L=unique(sub.df.fh$L), .combine=rbind) %do%
                 {
                   sub.df.L = sub.df.fh[sub.df.fh$L==L,]
                   
-                  fst.mean = foreach(fst=sub.df.L$fst, .combine=rbind) %do% 
+                  fst.metrics = foreach(fst=sub.df.L$fst, .combine=rbind) %do% 
                     {
                       sub.df.fst = sub.df.L[sub.df.L$fst==fst,]
-                      mean.dist <- mean(sub.df.fst[,"rand.dist"])
-                      sd.dist <- sd(sub.df.fst[,"rand.dist"])
-                      all.dist<- cbind(mean.dist,sd.dist)
+                      mean.dist <- mean(abs(sub.df.fst[,"rand.dist"]))
                     }
                 }
             }
-          print(all.metrics)
-        #----------------------------------------------------------------------------------
-        final.Null <- cbind(rand_nst.list, rand.dist, all.metrics)
-        return(final.Null)
+          #----------------------------------------------------------------------------------
+        Null_comMetrics <- cbind(Null_comMetrics, rand_nst.list, rand.dist, all.means)
+        return(all.means)
         
-      }
-      # tr.df <- cbind(tr.df, rand_fst = rand_fst.list, rand_nst = rand_nst.list)
-      # names(tr.df)[names(tr.df) == "rand_fst"] <- paste0("Null_fst_", h)
-      # names(tr.df)[names(tr.df) == "rand_nst"] <- paste0("Null_nst_", h)
-      colnames(Null_com) <- list.names
+        }
       
-      Null_comTrait<- cbind(tr.df,Null_com)
+      Null_comTrait<- as.data.frame(cbind(tr.df,rowMeans(Null_means), apply(Null_means, 1, sd), Null_comMetrics))
+      names(Null_comTrait) <- list.names
+      return(Null_comTrait)
     }
-      #return(list(obs = nst_obs, null = nst_null.list))
-   #randNeigh <- append(randNeigh,tr.df) 
-  names(Null_comAll) <- traits
-  #return(Null_comTrait)
-  return(Null_comAll)
-  # return(list(fst = focalst, com.rel = com.rel$nbobs, com.init = nst_init, com.null = nst_RAND))
+      
+  names(Null_comMeans) <- traits
+  return(Null_comMeans)
+}
+
 }
 
 traits <- c("duration","dom_freq")
