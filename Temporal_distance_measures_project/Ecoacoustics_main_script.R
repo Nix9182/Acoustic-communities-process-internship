@@ -169,3 +169,17 @@ no.neigh = -4:4
 #new.Neigh <- FUN2_getAcousMetrics(test.Neigh, traits, list.acousdist, list.acouscomrand, list.acouspool)
 #test.Rand <- fun_getRandAcousComm(new.Neigh, traits, list.acouscomrand, no.rand, list.acouspool)
 #test.SES <- FUN_calcSes(test.Rand)
+
+test.final <- FUNCTION_Comm(channel=channel,
+                            site=site,
+                            releves= Acous.releves,
+                            no.neigh = no.neigh, 
+                            traits = traits,
+                            list.comrand = list.acouscomrand,
+                            list.dist = list.acousdist,
+                            list.pool = list.acouspool)
+
+#test plot of SES for each level 
+df.agreg <- aggregate(SES ~ L, data=test.final[["dom_freq"]], mean)
+plot(df.agreg$L,df.agreg$SES)
+
