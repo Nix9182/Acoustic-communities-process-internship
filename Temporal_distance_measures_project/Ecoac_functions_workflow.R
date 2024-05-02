@@ -25,13 +25,6 @@ FUN1_getNeigh = function(releves, channel, site, date, no.neigh)
  
 }
 
-channel = "left"
-site = "BEARAV"
-date = "20140620"
-no.neigh = -4:4
-
-test.Neigh = FUN1_getNeigh(Acous.releves, channel, site, date, no.neigh)
-
 #############################################################################################################
 ## NO Function to get sub-neighborhoods, null communities and SES calculations for a given focal individual
 FUN2_getAcousMetrics = function(df.neigh, traits, list.acousdist, list.acouscomrand, list.acouspool)

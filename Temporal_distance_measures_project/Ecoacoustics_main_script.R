@@ -62,6 +62,8 @@ traits_names = c("duration", "dom_freq")
 
 ## Prepare traits (log transformation + gaussianize)
 # We normalize and scale the traits to be able to compare and perform statistical tests.
+
+
 Acous.traits = Acous.traits %>%
   mutate_at(traits_names, as.numeric)%>%
   mutate_at(traits_names, log) %>%
@@ -153,3 +155,17 @@ list.acouscomrand = foreach(tr.dim = c("duration","dom_freq")) %do% {
   return(res)
 }
 names(list.acouscomrand) = c("duration","dom_freq")
+
+## D. Compute SES for each site ---------------------------------------------
+
+##tests with BEARAV
+traits <- c("duration","dom_freq")
+channel = "left"
+site = "BEARAV"
+date = "20140620"
+no.neigh = -4:4
+
+#test.Neigh <- FUN1_getNeigh(Acous.releves, channel, site, date, no.neigh)
+#new.Neigh <- FUN2_getAcousMetrics(test.Neigh, traits, list.acousdist, list.acouscomrand, list.acouspool)
+#test.Rand <- fun_getRandAcousComm(new.Neigh, traits, list.acouscomrand, no.rand, list.acouspool)
+#test.SES <- FUN_calcSes(test.Rand)

@@ -82,5 +82,3 @@ FUN_calcSes = function(rand.Metrics)
   return(res)
 }
 
-traits <- c("duration","dom_freq")
-test.Rand <- fun_getRandAcousComm(new.Neigh, traits, list.acouscomrand, no.rand, list.acouspool)

@@ -51,7 +51,7 @@ infoday = function(path, site, channel){
 }
 
 
-Acous.info <- data.frame(infoday(path, site, channel))
+# Acous.info <- data.frame(infoday(path, site, channel))
 
 
 #############################################################################################################
