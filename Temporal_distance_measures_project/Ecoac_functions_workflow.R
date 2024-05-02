@@ -65,6 +65,7 @@ FUNCTION_Comm = function(channel, site, releves
                          , list.comrand, no.neigh
                          , traits, list.dist, list.pool, focus)
 {
+  if (focus=="day"){
     dates <- unique(releves[releves$site==site,]$date)
     
     df_SES_dates = foreach(d=dates)%do%{
@@ -90,6 +91,11 @@ FUNCTION_Comm = function(channel, site, releves
       
       }
     }
+  }
+  
+  else if (focus=="recording"){
+    
+  }
   
   names(df_organized) <- traits
   
