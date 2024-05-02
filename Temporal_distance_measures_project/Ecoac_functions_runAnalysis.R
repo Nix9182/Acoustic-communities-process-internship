@@ -67,6 +67,19 @@ fun_getRandAcousComm = function(neighdf, traits, list.acouscomrand, no.rand, lis
   return(Null_comMeans)
 }
 
+#############################################################################################################
+## YES Function to calculate the acoustic distances between the focal individual and neighborhoods.
+FUN_calcSes = function(rand.Metrics)
+{
+  res= foreach(tr.dim=names(rand.Metrics))%do%{
+    tr.df = rand.Metrics[[tr.dim]][,c("fh","nh","L","fst","nst", "Obs_dist", 'Null_mean_all', 'Null_sd_all')]
+  ## Get distances between neighbor species and the focal species for each trait required
+    tr.df$SES = (tr.df$Obs_dist-tr.df$Null_mean_all)/tr.df$Null_sd_all
+    return(tr.df)
+  }
+  names(res)<-names(rand.Metrics)
+
+  return(res)
 }
 
 traits <- c("duration","dom_freq")
