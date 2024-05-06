@@ -214,3 +214,32 @@ SES.all.dom_freq <- rbind(SES.BEARAV.dom_freq,SES.VILOAM.dom_freq)
 
 
 
+#####################################################################################################
+#Plot trait distribution for each site
+
+Acous.scaled = Acous.info
+
+values.scaled = foreach(tr=c("duration","dom_freq"), .combine=cbind)%do%{
+  trait.scaled = foreach(st=Acous.scaled$type, .combine=rbind)%do%{
+    Acous.traits[st,tr]
+  }
+  names(trait.scaled) <- tr
+  return(trait.scaled)
+}
+values.scaled <- as.data.frame(values.scaled)
+names(values.scaled) <- c("duration","dom_freq")
+Acous.scaled <- cbind(Acous.scaled, values.scaled)
+
+tr_names = c(duration = "Duration",
+             dom_freq ="Dominant frequency")
+ggdata = melt(Acous.scaled[, names(tr_names)])
+ggdata = ggdata %>% mutate(variable = recode(variable, !!!tr_names))
+ggplot(ggdata, aes(x = value)) +
+  facet_grid(.~variable, scales = "free_x") +
+  geom_histogram(alpha = 0.5) +
+  theme_bw() +
+  xlab("Log-transformed and scaled trait values") +
+  labs(fill = "Acoustic traits", title= "Distribution across all recordings")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
