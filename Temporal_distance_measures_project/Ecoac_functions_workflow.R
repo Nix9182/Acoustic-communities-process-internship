@@ -1,36 +1,32 @@
 
 #############################################################################################################
 ## YES Function to get the focal individual and the neighborhood for each pinpoint
-FUN1_getNeigh = function(releves, channel, site, date, no.neigh)
+FUN1_getNeigh = function(releves, site, date, no.neigh)
 {
- day.rel = releves[releves$channel == channel 
-                     & releves$site== site 
-                     & releves$date == date, ][,c("hour","type")]
+ day.rel = releves[releves$site== site 
+                    & releves$date == date, ][,c("channel","hour","type")]
  
- pin.neigh <- data.frame(matrix(ncol = 0, nrow = 0))
- 
- for (fh in unique(day.rel$hour)){
-   pin.test <- data.frame(matrix(ncol = 0, nrow = 0))
-   for (nh in unique(day.rel$hour)){
-     focal.types = day.rel[day.rel$hour == fh,]$type
-     neigh.types = day.rel[day.rel$hour == nh,]$type
-     L <- nh-fh
-     RES <- expand.grid(nst= neigh.types, fst= focal.types)
-     RES <- cbind(fh=rep(fh, length(RES$fst)),nh=rep(nh, length(RES$fst)), RES, L=rep(L, length(RES$fst)))
-     pin.test <- rbind(pin.test,RES)
-   }
-   pin.neigh <- rbind(pin.neigh, pin.test)
+ pin.neigh = foreach (chan=unique(day.rel$channel), .combine=rbind)%do%{
+   df_chan = day.rel[day.rel$channel==chan,]
+   foreach (fh=unique(df_chan$hour), .combine=rbind)%do%{
+     focal.types = df_chan[df_chan$hour == fh,]$type
+     
+     foreach(nh=unique(df_chan$hour),.combine=rbind)%do%{
+       neigh.types = df_chan[df_chan$hour == nh,]$type
+       L <- nh-fh
+       RES <- expand.grid(nst= neigh.types, fst= focal.types)
+       RES <- cbind(channel=rep(chan, length(RES$fst)), fh=rep(fh, length(RES$fst)),nh=rep(nh, length(RES$fst)), RES, L=rep(L, length(RES$fst)))
+    }
+  }
  }
- return(pin.neigh[pin.neigh$L %in% c(no.neigh), c('fh','nh','fst','nst','L') ]) #to keep levels wanted and intervert place of fst and nst for more readability
+return(pin.neigh[pin.neigh$L %in% c(no.neigh), c("channel",'fh','nh','fst','nst','L') ]) #to keep levels wanted and intervert place of fst and nst for more readability
  
 }
 
 #############################################################################################################
-## NO Function to get sub-neighborhoods, null communities and SES calculations for a given focal individual
-FUN2_getAcousMetrics = function(df.neigh, traits, list.acousdist, list.acouscomrand, list.acouspool)
+## YES Function to get sub-neighborhoods, null communities and SES calculations for a given focal individual
+FUN2_getAcousMetrics = function(df.neigh, traits, list.acousdist, list.acouspool)
 {
-  ## Get all null communities 
-  # randNull = fun_getRandComm(abundx = abundf, focalsp = focalsp, list.comrand = list.comrand, no.rand = no.rand, list.pool = list.pool)
   ## Get the observed acoustic distances between focal and neighbors
   
   df.neigh.dist <- df.neigh
@@ -45,6 +41,91 @@ FUN2_getAcousMetrics = function(df.neigh, traits, list.acousdist, list.acouscomr
     colnames(df.neigh.dist)[ncol(df.neigh.dist)] <- paste0("Obs_dist_", tr.dim)
   }
   return(df.neigh.dist)
+}
+
+
+##########################################################################################################
+## YES Function to create the random neighborhoods for each focal indvidual given the list.comrand and get differences and means
+fun_getRandAcousComm = function(neighdf, traits, list.acouscomrand, no.rand, list.acouspool)
+{
+  acouscomrand = list.acouscomrand #randomized pool 
+  rownames(acouscomrand) <- acouscomrand[, "Obs"]
+  ## Get OBSERVED focal and neighbor soundtype in the initial releve
+  Null_comMeans <- foreach(tr.dim= traits)%do%
+    {
+      Null_comMetrics = NULL
+      tr.df = neighdf[neighdf$fst!=neighdf$nst ,c("channel","fh","nh","L","fst","nst", paste0("Obs_dist_", tr.dim))]
+      colnames(tr.df)[colnames(tr.df)==paste0("Obs_dist_", tr.dim)] <- "Obs_dist"
+      list.names <-c(colnames(tr.df), 'Null_mean_all', 'Null_sd_all')
+      
+      ## Get 'random' focal species for each null community associated to OBSERVED focal species
+      Null_means = foreach(h= 1:no.rand, .combine=cbind) %do% 
+        {
+          name = paste0("Null_nst_", h)
+          name.dist = paste0("Null_dist_", h)
+          name.mean = paste0("Null_mean_", h)
+          list.names <- c(list.names, name, name.dist, name.mean)
+          
+          
+          #--------------------------------------------------------------------------------- 
+          rand_nst.list = foreach(nst= tr.df$nst, .combine=rbind)  %do% 
+            {
+              rand_nst = acouscomrand[nst, paste0("Null_", h)] 
+            }
+          #---------------------------------------------------------------------------------
+          rand.dist = foreach(i=1:length(tr.df$fst), .combine=rbind) %do% 
+            {
+              fst = as.character(tr.df$fst[i])
+              nst = as.character(rand_nst.list[i])
+              neigh.dist <- list.acousdist[[tr.dim]][fst,nst]
+            }
+          
+          #---------------------------------------------------------------------------------
+          transit.dfx = cbind(tr.df[,c("fh","L","fst")], rand_nst.list, rand.dist)
+          
+          all.means = foreach(fh=unique(transit.dfx$fh), .combine=rbind) %do%
+            {
+              sub.df.fh = transit.dfx[transit.dfx$fh == fh,]
+              
+              L.metrics = foreach(L=unique(sub.df.fh$L), .combine=rbind) %do%
+                {
+                  sub.df.L = sub.df.fh[sub.df.fh$L==L,]
+                  
+                  fst.metrics = foreach(fst=sub.df.L$fst, .combine=rbind) %do% 
+                    {
+                      sub.df.fst = sub.df.L[sub.df.L$fst==fst,]
+                      mean.dist <- mean(abs(sub.df.fst[,"rand.dist"]))
+                    }
+                }
+            }
+          #----------------------------------------------------------------------------------
+          Null_comMetrics <- cbind(Null_comMetrics, rand_nst.list, rand.dist, all.means)
+          return(all.means)
+          
+        }
+      
+      Null_comTrait<- as.data.frame(cbind(tr.df,rowMeans(Null_means), apply(Null_means, 1, sd), Null_comMetrics))
+      names(Null_comTrait) <- list.names
+      return(Null_comTrait)
+    }
+  
+  names(Null_comMeans) <- traits
+  return(Null_comMeans)
+}
+
+#############################################################################################################
+## YES Function to calculate the acoustic distances between the focal individual and neighborhoods.
+FUN_calcSes = function(rand.Metrics)
+{
+  res= foreach(tr.dim=names(rand.Metrics))%do%{
+    tr.df = rand.Metrics[[tr.dim]][,c("channel","fh","nh","L","fst","nst", "Obs_dist", 'Null_mean_all', 'Null_sd_all')]
+    ## Get distances between neighbor species and the focal species for each trait required
+    tr.df$SES = (tr.df$Obs_dist-tr.df$Null_mean_all)/tr.df$Null_sd_all
+    return(tr.df)
+  }
+  names(res)<-names(rand.Metrics)
+  
+  return(res)
 }
 
 #############################################################################################################
