@@ -294,3 +294,35 @@ ggplot(Acous.m.ns, aes(site, value, color=site)) +
 
 
 
+##### Plot SES-----------------------------------------------------------------------------------
+p_BEARAV_dur <- ggplot(SES.BEARAV.dur, aes(x=L, y=SES))+
+  geom_point(show.legend = FALSE, color=hue_pal()(2)[1]) +
+  labs(x="Temporal distance (Hour)", y= "Acoustic distance (SES)", title= "Duration")+
+  theme_bw()+
+  ylim(c(-40,28))+
+  theme(plot.title = element_text(hjust = 0.5))
+
+p_VILOAM_dur <- ggplot(SES.VILOAM.dur, aes(x=L, y=SES))+
+  geom_point(show.legend = FALSE, color=hue_pal()(2)[2]) +
+  labs(x="Temporal distance (Hour)", y= "Acoustic distance (SES)", title= "Duration")+
+  theme_bw()+
+  ylim(c(-40,28))+
+  theme(plot.title = element_text(hjust = 0.5))
+
+p_BEARAV_dom_freq <- ggplot(SES.BEARAV.dom_freq, aes(x=L, y=SES))+
+  geom_point(show.legend = FALSE, color=hue_pal()(2)[1]) +
+  labs(x="Temporal distance (Hour)", y= "Acoustic distance (SES)", title= "Dominant frequency")+
+  theme_bw()+
+  ylim(c(-40,28))+
+  theme(plot.title = element_text(hjust = 0.5))
+
+p_VILOAM_dom_freq <- ggplot(SES.VILOAM.dom_freq, aes(x=L, y=SES))+
+  geom_point(show.legend = FALSE, color=hue_pal()(2)[2]) +
+  labs(x="Temporal distance (Hour)", y= "Acoustic distance (SES)", title= "Dominant frequency")+
+  theme_bw()+
+  ylim(c(-40,28))+
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggarrange(p_BEARAV_dur,p_VILOAM_dur,p_BEARAV_dom_freq,p_VILOAM_dom_freq, nrow = 2, ncol = 2)
+
+
