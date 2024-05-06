@@ -196,3 +196,21 @@ if (!("SES_VILOAM_duration.csv" %in% list.files())){write.csv(final.VILOAM$durat
 if (!("SES_VILOAM_dom_freq.csv" %in% list.files())){write.csv(final.VILOAM$dom_freq,file="SES_VILOAM_dom_freq.csv")}
 
 
+#test plot of SES for each level################################
+# setwd("C:/Users/cobod/OneDrive/Bureau/Ecoacoustic project internship/Acoustic-communities-process-internship/Temporal_distance_measures_project/OUTPUTS")
+
+SES.BEARAV.dur <- as.data.frame(read.csv("SES_BEARAV_duration.csv"))
+SES.VILOAM.dur <- as.data.frame(read.csv("SES_VILOAM_duration.csv"))
+SES.BEARAV.dom_freq <- as.data.frame(read.csv("SES_BEARAV_dom_freq.csv"))
+SES.VILOAM.dom_freq <- as.data.frame(read.csv("SES_VILOAM_dom_freq.csv"))
+
+SES.BEARAV.dur$X <- NULL
+SES.VILOAM.dur$X <- NULL
+SES.BEARAV.dom_freq$X<- NULL
+SES.VILOAM.dom_freq$X <- NULL
+
+SES.all.dur <- rbind(SES.BEARAV.dur,SES.VILOAM.dur)
+SES.all.dom_freq <- rbind(SES.BEARAV.dom_freq,SES.VILOAM.dom_freq)
+
+
+
