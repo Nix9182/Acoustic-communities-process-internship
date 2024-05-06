@@ -1,0 +1,658 @@
+rm(list=ls())#
+path <- "/media/bioac/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+file.pb2 <- c()#
+pb2 <- c()#
+#
+for (k in site){#
+	for (j in channel){#
+setwd(paste("/media/bioac/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/", k, "/", j, sep=""))#
+		for (file in list.files(pattern="*[0-9]$")){#
+			sound.types <- read.table(file, dec=',')#
+			sound.types[,3] <- formatC(sound.types[,3], digits=2,flag="0")#
+#
+			for (i in 1:dim(sound.types)[1]){#
+				a <- formatC(i, digits=2,flag="0")#
+				path.st <- paste(path, sound.types[i,3], "/", sep="")#
+				file.st <- paste(sound.types[i,3], "_", file, '_', a, sep="")#
+				if (length(list.files(path=path.st, pattern=file.st))==0){#
+					pb2 <- c(pb2,file.st)#
+					file.pb2 <- c(file.pb2,file)#
+				}#
+			}#
+		}#
+	}#
+}#
+file.pb2 <- unique(file.pb2)
+rm(list=ls())#
+path <- "/media/bioac/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+file.pb2 <- c()#
+pb2 <- c()#
+#
+for (k in site){#
+	for (j in channel){#
+setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		for (file in list.files(pattern="*[0-9]$")){#
+			sound.types <- read.table(file, dec=',')#
+			sound.types[,3] <- formatC(sound.types[,3], digits=2,flag="0")#
+#
+			for (i in 1:dim(sound.types)[1]){#
+				a <- formatC(i, digits=2,flag="0")#
+				path.st <- paste(path, sound.types[i,3], "/", sep="")#
+				file.st <- paste(sound.types[i,3], "_", file, '_', a, sep="")#
+				if (length(list.files(path=path.st, pattern=file.st))==0){#
+					pb2 <- c(pb2,file.st)#
+					file.pb2 <- c(file.pb2,file)#
+				}#
+			}#
+		}#
+	}#
+}#
+file.pb2 <- unique(file.pb2)
+file.pb2
+rm(list=ls())#
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+file.pb2 <- c()#
+pb2 <- c()#
+#
+for (k in site){#
+	for (j in channel){#
+setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		for (file in list.files(pattern="*[0-9]$")){#
+			sound.types <- read.table(file, dec=',')#
+			sound.types[,3] <- formatC(sound.types[,3], digits=2,flag="0")#
+#
+			for (i in 1:dim(sound.types)[1]){#
+				a <- formatC(i, digits=2,flag="0")#
+				path.st <- paste(path, sound.types[i,3], "/", sep="")#
+				file.st <- paste(sound.types[i,3], "_", file, '_', a, sep="")#
+				if (length(list.files(path=path.st, pattern=file.st))==0){#
+					pb2 <- c(pb2,file.st)#
+					file.pb2 <- c(file.pb2,file)#
+				}#
+			}#
+		}#
+	}#
+}#
+file.pb2 <- unique(file.pb2)
+file.pb2
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+setwd(path)#
+st.files <- c()#
+for (i in 1:140){#
+	st.files <- c(st.files, list.files(path=formatC(i, digits=2,flag="0")))#
+}
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+#
+decale.file <- c()#
+for (k in site){#
+	for (j in channel){#
+setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		for (file in intersect(list.files(pattern="*[0-9]$"),file.pb2)){#
+			sound.types <- read.table(file, dec=',')#
+			a <- formatC((dim(sound.types)[1]),digits=2,flag="0")#
+			lines.st <- which(substr(st.files, start=5,stop=28)==file)#
+			lines <- substr(st.files[which(substr(st.files, start=5,stop=28)==file)], start=30, stop=32)#
+			decale <- st.files[lines.st[lines>a]]#
+			if (length(decale)!=0){#
+				decale.file <- c(decale.file, file)#
+			}#
+		}#
+	}#
+}
+decale.file
+save(file.pb2, file="/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/filepbfinaux.Rdata")
+save(pb2, file="/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/pb2.Rdata")
+path <- "/media/bioac/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+setwd(path)#
+st.files <- c()#
+for (i in 1:140){#
+	st.files <- c(st.files, list.files(path=formatC(i, digits=2,flag="0")))#
+}#
+#
+for (i in file.pb2){#
+	channel <- substr(i, start=1, stop=1)#
+	pond <- substr(i, start=3, stop=8)#
+	cha <- ifelse(channel == "L", "left", "right")#
+	marqueur <- read.table(paste('/media/bioac/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/', pond, "/", cha, "/", i, sep=''))#
+	write.table(as.data.frame(marqueur), file=paste('/media/bioac/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/', pond, "/", cha, "/", i, '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+	for (j in which(substr(pb2, start=5,stop=28)==i)){#
+		line.pb2 <- as.numeric(substr(pb2[j], start=30, stop=32))#
+		if (is.na(marqueur[line.pb2,1])){#
+		marqueur <- marqueur[-line.pb2,]#
+#		} else if (length(which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32)))==0) {#
+#			marqueur <- marqueur[-line.pb2,]#
+		} else {#
+			right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32))]#
+			type <- as.numeric(substr(right.st.file,start=1, stop=3))#
+			line <- as.numeric(substr(right.st.file,start=30, stop=32))#
+			marqueur[line,3] <- type#
+		}#
+	}#
+	write.table(as.data.frame(marqueur), file=paste('/media/bioac/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/', pond, "/", cha, "/", i, sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+}
+for (i in file.pb2){#
+	channel <- substr(i, start=1, stop=1)#
+	pond <- substr(i, start=3, stop=8)#
+	cha <- ifelse(channel == "L", "left", "right")#
+	marqueur <- read.table(paste('/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/', pond, "/", cha, "/", i, sep=''))#
+	write.table(as.data.frame(marqueur), file=paste('/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/', pond, "/", cha, "/", i, '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+	for (j in which(substr(pb2, start=5,stop=28)==i)){#
+		line.pb2 <- as.numeric(substr(pb2[j], start=30, stop=32))#
+		if (is.na(marqueur[line.pb2,1])){#
+		marqueur <- marqueur[-line.pb2,]#
+#		} else if (length(which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32)))==0) {#
+#			marqueur <- marqueur[-line.pb2,]#
+		} else {#
+			right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32))]#
+			type <- as.numeric(substr(right.st.file,start=1, stop=3))#
+			line <- as.numeric(substr(right.st.file,start=30, stop=32))#
+			marqueur[line,3] <- type#
+		}#
+	}#
+	write.table(as.data.frame(marqueur), file=paste('/media/bioac/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/', pond, "/", cha, "/", i, sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+}
+for (i in file.pb2){#
+	channel <- substr(i, start=1, stop=1)#
+	pond <- substr(i, start=3, stop=8)#
+	cha <- ifelse(channel == "L", "left", "right")#
+	marqueur <- read.table(paste('/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/', pond, "/", cha, "/", i, sep=''))#
+	write.table(as.data.frame(marqueur), file=paste('/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/', pond, "/", cha, "/", i, '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+	for (j in which(substr(pb2, start=5,stop=28)==i)){#
+		line.pb2 <- as.numeric(substr(pb2[j], start=30, stop=32))#
+		if (is.na(marqueur[line.pb2,1])){#
+		marqueur <- marqueur[-line.pb2,]#
+#		} else if (length(which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32)))==0) {#
+#			marqueur <- marqueur[-line.pb2,]#
+		} else {#
+			right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32))]#
+			type <- as.numeric(substr(right.st.file,start=1, stop=3))#
+			line <- as.numeric(substr(right.st.file,start=30, stop=32))#
+			marqueur[line,3] <- type#
+		}#
+	}#
+	write.table(as.data.frame(marqueur), file=paste('/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/files/', pond, "/", cha, "/", i, sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+}
+rm(list=ls())#
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+file.pb2 <- c()#
+pb2 <- c()#
+#
+for (k in site){#
+	for (j in channel){#
+setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		for (file in list.files(pattern="*[0-9]$")){#
+			sound.types <- read.table(file, dec=',')#
+			sound.types[,3] <- formatC(sound.types[,3], digits=2,flag="0")#
+#
+			for (i in 1:dim(sound.types)[1]){#
+				a <- formatC(i, digits=2,flag="0")#
+				path.st <- paste(path, sound.types[i,3], "/", sep="")#
+				file.st <- paste(sound.types[i,3], "_", file, '_', a, sep="")#
+				if (length(list.files(path=path.st, pattern=file.st))==0){#
+					pb2 <- c(pb2,file.st)#
+					file.pb2 <- c(file.pb2,file)#
+				}#
+			}#
+		}#
+	}#
+}#
+file.pb2 <- unique(file.pb2)
+file.pb2
+getwd()
+list.files(pattern="*[0-9]$")
+load("/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/filepbfinaux.Rdata")
+load("/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/pb2.Rdata")
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+setwd(path)#
+st.files <- c()#
+for (i in 1:140){#
+	st.files <- c(st.files, list.files(path=formatC(i, digits=2,flag="0")))#
+}#
+#
+for (i in file.pb2){#
+	channel <- substr(i, start=1, stop=1)#
+	pond <- substr(i, start=3, stop=8)#
+	cha <- ifelse(channel == "L", "left", "right")#
+	marqueur <- read.table(paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, sep=''))#
+	write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+	for (j in which(substr(pb2, start=5,stop=28)==i)){#
+		line.pb2 <- as.numeric(substr(pb2[j], start=30, stop=32))#
+		if (is.na(marqueur[line.pb2,1])){#
+		marqueur <- marqueur[-line.pb2,]#
+#		} else if (length(which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32)))==0) {#
+#			marqueur <- marqueur[-line.pb2,]#
+		} else {#
+			right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32))]#
+			type <- as.numeric(substr(right.st.file,start=1, stop=3))#
+			line <- as.numeric(substr(right.st.file,start=30, stop=32))#
+			marqueur[line,3] <- type#
+		}#
+	}#
+	write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+}
+rm(list=ls())#
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+file.pb2 <- c()#
+pb2 <- c()#
+#
+for (k in site){#
+	for (j in channel){#
+setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		for (file in list.files(pattern="*[0-9]$")){#
+			sound.types <- read.table(file, dec=',')#
+			sound.types[,3] <- formatC(sound.types[,3], digits=2,flag="0")#
+#
+			for (i in 1:dim(sound.types)[1]){#
+				a <- formatC(i, digits=2,flag="0")#
+				path.st <- paste(path, sound.types[i,3], "/", sep="")#
+				file.st <- paste(sound.types[i,3], "_", file, '_', a, sep="")#
+				if (length(list.files(path=path.st, pattern=file.st))==0){#
+					pb2 <- c(pb2,file.st)#
+					file.pb2 <- c(file.pb2,file)#
+				}#
+			}#
+		}#
+	}#
+}#
+file.pb2 <- unique(file.pb2)
+file.pb2
+i <- file.pb2[2]#
+st.files[which(substr(st.files, start=5, stop=28)==i)]
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+setwd(path)#
+st.files <- c()#
+for (i in 1:140){#
+	st.files <- c(st.files, list.files(path=formatC(i, digits=2,flag="0")))#
+}
+i <- file.pb2[2]#
+st.files[which(substr(st.files, start=5, stop=28)==i)]
+i <- file.pb2[1]#
+st.files[which(substr(st.files, start=5, stop=28)==i)]
+pb2
+pb.double
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+setwd(path)#
+st.files <- c()#
+for (i in 1:140){#
+	st.files <- c(st.files, list.files(path=formatC(i, digits=2,flag="0")))#
+}#
+#
+pb.double <- c()#
+for (i in unique(substr(st.files, start=5,stop=32))){#
+	right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==i)]#
+	if (length(right.st.file)>1){#
+		pb.double <- c(pb.double, right.st.file)#
+	}#
+}#
+file.pb.double <- unique(substr(pb.double, start=5, stop=32))
+file.pb.double
+save(file.pb.double, file="/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/filepbfinaux.Rdata")#
+save(pb.double, file="/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/pb2.Rdata")
+a <- intersect(substr(file.pb.double, start=1, stop=24), file.pb2)#
+if (length(a)!=0){#
+rm.lines <- c()#
+for (i in a){#
+rm.lines <- c(rm.lines,which(substr(file.pb.double, start=1, stop=24)==i))#
+}#
+file.pb.double2 <- file.pb.double[-rm.lines]#
+}
+file.pb.double2
+substr(file.pb.double, start=1, stop=24)
+i <- file.pb.double[1]
+channel <- substr(i, start=1, stop=1)
+channel
+pond <- substr(i, start=3, stop=8)
+pond
+cha <- ifelse(channel == "L", "left", "right")
+marqueur <- read.table(paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", substr(i, start=1, stop=24), sep='', dec=','))
+marqueur <- read.table(paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", substr(i, start=1, stop=24), sep=''), dec=',')
+marqueur
+substr(i, start=1, stop=24)
+write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", substr(i, start=1, stop=24), '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)
+line.pb <- as.numeric(substr(i, start=26, stop=28))
+line.pb
+i
+right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==i)]
+right.st.file
+type <- as.numeric(substr(right.st.file,start=1, stop=3))
+a <- which(type!=marqueur[line.pb,3])
+a
+if (line.pb==dim(marqueur)[1]){#
+		add <- marqueur[line.pb,]#
+		add[,3] <- type[a]#
+		marqueur <- rbind(marqueur[1:line.pb,], add)
+} else {#
+		add <- marqueur[line.pb,]#
+		add[,3] <- type[a]#
+		marqueur <- rbind(marqueur[1:line.pb,], add, marqueur[(line.pb+1):dim(marqueur)[1],])#
+	}
+marqueur
+row.names(marqueur) <- 1:dim(marqueur)[1]
+marqueur
+substr(file.pb.double2, start=1, stop=24)
+file.double <- unique(substr(file.pb.double2, start=1, stop=24))
+file.double
+file.pb.double2
+i
+i <- file.double
+pb.double[which(substr(st.files, start=5, stop=28)==i)]
+pb.double[which(substr(pb.double, start=5, stop=28)==i)]
+pb.double[1]
+substr(pb.double, start=5, stop=28)
+pb.double[which(substr(pb.double, start=5, stop=28)==i)]
+i
+i <- file.double[1]
+pb.double[which(substr(pb.double, start=5, stop=28)==i)]
+line.pb <- as.numeric(substr(pb.tot, start=26, stop=28))
+right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==i)]
+type <- as.numeric(substr(right.st.file,start=1, stop=3))
+type
+pb.tot <- pb.double[which(substr(pb.double, start=5, stop=28)==i)]
+line.pb <- as.numeric(substr(pb.tot, start=26, stop=28))
+line.pb
+line.pb <- as.numeric(substr(pb.tot, start=30, stop=32))
+line.pb
+right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==i)]
+right.st.file
+right.st.file <- st.files[which(substr(st.files, start=5,stop=25)==i)]
+substr(st.files[1], start=5,stop=25)
+substr(st.files[1], start=5,stop=26)
+substr(st.files[1], start=5,stop=28)
+right.st.file <- st.files[which(substr(st.files[1], start=5,stop=28)==i)]
+right.st.file
+i
+right.st.file <- st.files[which(substr(st.files, start=5,stop=28)==i)]
+right.st.file
+pb.tot
+type <- as.numeric(substr(pb.tot,start=1, stop=3))
+a <- which(type!=marqueur[line.pb,3])
+a
+seq(1,(length(type)/2), by=2)
+for (i in file.double){#
+	channel <- substr(i, start=1, stop=1)#
+	pond <- substr(i, start=3, stop=8)#
+	cha <- ifelse(channel == "L", "left", "right")#
+	marqueur <- read.table(paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, sep=''), dec=',')#
+	write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+	pb.tot <- pb.double[which(substr(pb.double, start=5, stop=28)==i)]#
+	line.pb <- as.numeric(substr(pb.tot, start=30, stop=32))#
+	type <- as.numeric(substr(pb.tot,start=1, stop=3))#
+	if (length(type)>2){#
+		show(i)
+}else{}
+}
+i <- "L_BEARAV_20140620_120000"
+channel <- substr(i, start=1, stop=1)
+pond <- substr(i, start=3, stop=8)
+cha <- ifelse(channel == "L", "left", "right")
+marqueur <- read.table(paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, sep=''), dec=',')
+write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)
+marqueur
+pb.tot <- pb.double[which(substr(pb.double, start=5, stop=28)==i)]
+pb.tot
+rank(pb.tot)
+rank(line.pb)
+line.pb <- as.numeric(substr(pb.tot, start=30, stop=32))
+rank(line.pb)
+sort(line.bp)
+sort(line.pb)
+file.double <- unique(substr(file.pb.double2, start=1, stop=24))#
+man <- c()#
+for (i in file.double){#
+	channel <- substr(i, start=1, stop=1)#
+	pond <- substr(i, start=3, stop=8)#
+	cha <- ifelse(channel == "L", "left", "right")#
+	marqueur <- read.table(paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, sep=''), dec=',')#
+	write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+	pb.tot <- pb.double[which(substr(pb.double, start=5, stop=28)==i)]#
+	line.pb <- as.numeric(substr(pb.tot, start=30, stop=32))#
+	type <- as.numeric(substr(pb.tot,start=1, stop=3))#
+	if (length(type)>2){#
+		man <- c(man, i)#
+## un seul marqueur doublé par fichier#
+	} else {#
+		a <- which(type!=marqueur[line.pb,3])#
+		if (line.pb==dim(marqueur)[1]){#
+		add <- marqueur[line.pb,]#
+		add[,3] <- type[a]#
+		marqueur <- rbind(marqueur[1:line.pb,], add)#
+		} else {#
+			add <- marqueur[line.pb,]#
+			add[,3] <- type[a]#
+			marqueur <- rbind(marqueur[1:line.pb,], add, marqueur[(line.pb+1):dim(marqueur)[1],])#
+		}#
+	row.names(marqueur) <- 1:dim(marqueur)[1]#
+	}#
+	write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", substr(i, start=1, stop=24), sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+}
+warnings
+warnings()
+marqueur
+pb.tot
+line.pb
+dim(marqueur)[1]
+man
+save(man, file='/bioac/home/man_doublons.Rdata')
+save(man, file='/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/man_doublons.Rdata')
+for (i in man){
+pb.tot <- pb.double[which(substr(pb.double, start=5, stop=28)==i)]
+show(pb.tot)
+}
+rm(list=ls())#
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+file.pb2 <- c()#
+pb2 <- c()#
+#
+for (k in site){#
+	for (j in channel){#
+setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		for (file in list.files(pattern="*[0-9]$")){#
+			sound.types <- read.table(file, dec=',')#
+			sound.types[,3] <- formatC(sound.types[,3], digits=2,flag="0")#
+#
+			for (i in 1:dim(sound.types)[1]){#
+				a <- formatC(i, digits=2,flag="0")#
+				path.st <- paste(path, sound.types[i,3], "/", sep="")#
+				file.st <- paste(sound.types[i,3], "_", file, '_', a, sep="")#
+				if (length(list.files(path=path.st, pattern=file.st))==0){#
+					pb2 <- c(pb2,file.st)#
+					file.pb2 <- c(file.pb2,file)#
+				}#
+			}#
+		}#
+	}#
+}#
+file.pb2 <- unique(file.pb2)
+file.pb2
+save(file.pb2, file="/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/filepbfinaux.Rdata")#
+save(pb2, file="/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/pb2.Rdata")
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+setwd(path)#
+st.files <- c()#
+for (i in 1:140){#
+	st.files <- c(st.files, list.files(path=formatC(i, digits=2,flag="0")))#
+}#
+#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+#
+decale.file <- c()#
+for (k in site){#
+	for (j in channel){#
+setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		for (file in intersect(list.files(pattern="*[0-9]$"),file.pb2)){#
+			sound.types <- read.table(file, dec=',')#
+			a <- formatC((dim(sound.types)[1]),digits=2,flag="0")#
+			lines.st <- which(substr(st.files, start=5,stop=28)==file)#
+			lines <- substr(st.files[which(substr(st.files, start=5,stop=28)==file)], start=30, stop=32)#
+			decale <- st.files[lines.st[lines>a]]#
+			if (length(decale)!=0){#
+				decale.file <- c(decale.file, file)#
+			}#
+		}#
+	}#
+}
+decale.file
+st.files
+for (i in file.pb2){#
+	channel <- substr(i, start=1, stop=1)#
+	pond <- substr(i, start=3, stop=8)#
+	cha <- ifelse(channel == "L", "left", "right")#
+	marqueur <- read.table(paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, sep=''))#
+	write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+	for (j in which(substr(pb2, start=5,stop=28)==i)){#
+		line.pb2 <- as.numeric(substr(pb2[j], start=30, stop=32))#
+		if (is.na(marqueur[line.pb2,1])){#
+		marqueur <- marqueur[-line.pb2,]#
+#		} else if (length(which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32)))==0) {#
+#			marqueur <- marqueur[-line.pb2,]#
+		} else {#
+			right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==substr(pb2[j], start=5,stop=32))]#
+			type <- as.numeric(substr(right.st.file,start=1, stop=3))#
+			line <- as.numeric(substr(right.st.file,start=30, stop=32))#
+			marqueur[line,3] <- type#
+		}#
+	}#
+	write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+}
+rm(list=ls())#
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+file.pb2 <- c()#
+pb2 <- c()#
+#
+for (k in site){#
+	for (j in channel){#
+setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		for (file in list.files(pattern="*[0-9]$")){#
+			sound.types <- read.table(file, dec=',')#
+			sound.types[,3] <- formatC(sound.types[,3], digits=2,flag="0")#
+#
+			for (i in 1:dim(sound.types)[1]){#
+				a <- formatC(i, digits=2,flag="0")#
+				path.st <- paste(path, sound.types[i,3], "/", sep="")#
+				file.st <- paste(sound.types[i,3], "_", file, '_', a, sep="")#
+				if (length(list.files(path=path.st, pattern=file.st))==0){#
+					pb2 <- c(pb2,file.st)#
+					file.pb2 <- c(file.pb2,file)#
+				}#
+			}#
+		}#
+	}#
+}#
+file.pb2 <- unique(file.pb2)
+file.pb2
+path <- "/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/sound_types/"#
+setwd(path)#
+st.files <- c()#
+for (i in 1:140){#
+	st.files <- c(st.files, list.files(path=formatC(i, digits=2,flag="0")))#
+}#
+#
+pb.double <- c()#
+for (i in unique(substr(st.files, start=5,stop=32))){#
+	right.st.file <- st.files[which(substr(st.files, start=5,stop=32)==i)]#
+	if (length(right.st.file)>1){#
+		pb.double <- c(pb.double, right.st.file)#
+	}#
+}#
+#
+file.pb.double <- unique(substr(pb.double, start=5, stop=32))
+file.pb.double
+save(file.pb.double, file="/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/filepbfinaux.Rdata")#
+save(pb.double, file="/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/pb2.Rdata")#
+#
+a <- intersect(substr(file.pb.double, start=1, stop=24), file.pb2)#
+if (length(a)!=0){#
+rm.lines <- c()#
+for (i in a){#
+rm.lines <- c(rm.lines,which(substr(file.pb.double, start=1, stop=24)==i))#
+}#
+file.pb.double2 <- file.pb.double[-rm.lines]#
+}#
+#
+file.double <- unique(substr(file.pb.double2, start=1, stop=24))
+file.double
+man <- c()#
+for (i in file.double){#
+	channel <- substr(i, start=1, stop=1)#
+	pond <- substr(i, start=3, stop=8)#
+	cha <- ifelse(channel == "L", "left", "right")#
+	marqueur <- read.table(paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, sep=''), dec=',')#
+	write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", i, '_old', sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+	pb.tot <- pb.double[which(substr(pb.double, start=5, stop=28)==i)]#
+	line.pb <- as.numeric(substr(pb.tot, start=30, stop=32))#
+	type <- as.numeric(substr(pb.tot,start=1, stop=3))#
+	if (length(type)>2){#
+		man <- c(man, i)#
+## un seul marqueur doublé par fichier#
+	} else {#
+		a <- which(type!=marqueur[line.pb,3])#
+		if (line.pb[1]==dim(marqueur)[1]){#
+		add <- marqueur[line.pb,]#
+		add[,3] <- type[a]#
+		marqueur <- rbind(marqueur[1:line.pb,], add)#
+		} else {#
+			add <- marqueur[line.pb,]#
+			add[,3] <- type[a]#
+			marqueur <- rbind(marqueur[1:line.pb,], add, marqueur[(line.pb+1):dim(marqueur)[1],])#
+		}#
+	row.names(marqueur) <- 1:dim(marqueur)[1]#
+	}#
+	write.table(as.data.frame(marqueur), file=paste('/Users/cdesjonq/Documents/files/', pond, "/", cha, "/", substr(i, start=1, stop=24), sep=''), row.names=FALSE, sep='\t', col.names=FALSE)#
+}#
+#
+save(man, file='/Volumes/INSECTS_AQ2/Thèse/Rhône/ecoute_continuous/analyses/data_formating/150823_marqueurbordel/man_doublons.Rdata')
+man()
+man
+file.double
+file.pb.double2
+file.pb.double
+rm(list=ls())#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+file.pb2 <- c()#
+pb2 <- c()#
+#
+for (k in site){#
+	for (j in channel){#
+		setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		a <- paste('rm ', list.files(pattern="*[old]$"), sep='')#
+		show(a)#
+		#for (i in a){system(i)}#
+	}#
+}
+rm(list=ls())#
+site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')#
+channel <- c('left', 'right')#
+file.pb2 <- c()#
+pb2 <- c()#
+#
+for (k in site){#
+	for (j in channel){#
+		setwd(paste("/Users/cdesjonq/Documents/files/", k, "/", j, sep=""))#
+		a <- paste('rm ', list.files(pattern="*[old]$"), sep='')#
+		for (i in a){system(i)}#
+	}#
+}
