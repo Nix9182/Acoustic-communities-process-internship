@@ -141,7 +141,7 @@ ab.st_no = length(ab.st_names)
 
 ## Amount of random communities wanted (SES calculations)
 # We would normally need more but increase the numbers depending on your computer.
-no.rand = 5 # Before increasing this number to 50 (previously it was 5) let's discuss this during the lecture. 
+no.rand = 50 # Before increasing this number to 50 (previously it was 5) let's discuss this during the lecture. 
 
 ## Create the test and random soundtypes list at once
 # We randomize the observed soundtypes "no.rand" times to create the null neighborhoods.
@@ -163,18 +163,10 @@ rownames(list.acouscomrand) = list.acouscomrand$Obs
 #########################################################################################################
 
 traits <- c("duration","dom_freq")
-channel = "left"
-site = "BEARAV"
-date = "20140620"
 no.neigh = -4:4
+site = "BEARAV"
 
-#test.Neigh <- FUN1_getNeigh(Acous.releves, channel, site, date, no.neigh)
-#new.Neigh <- FUN2_getAcousMetrics(test.Neigh, traits, list.acousdist, list.acouscomrand, list.acouspool)
-#test.Rand <- fun_getRandAcousComm(new.Neigh, traits, list.acouscomrand, no.rand, list.acouspool)
-#test.SES <- FUN_calcSes(test.Rand)
-
-test.final <- FUNCTION_Comm(channel=channel,
-                            site=site,
+final.BEARAV <- FUNCTION_Comm(site=site,
                             releves= Acous.releves,
                             no.neigh = no.neigh, 
                             traits = traits,
@@ -182,7 +174,25 @@ test.final <- FUNCTION_Comm(channel=channel,
                             list.dist = list.acousdist,
                             list.pool = list.acouspool)
 
-#test plot of SES for each level 
-df.agreg <- aggregate(SES ~ L, data=test.final[["dom_freq"]], mean)
-plot(df.agreg$L,df.agreg$SES)
+site = "VILOAM"
+
+final.VILOAM <- FUNCTION_Comm(site=site,
+                              releves= Acous.releves,
+                              no.neigh = no.neigh, 
+                              traits = traits,
+                              list.comrand = list.acouscomrand,
+                              list.dist = list.acousdist,
+                              list.pool = list.acouspool)
+
+setwd("C:/Users/cobod/OneDrive/Bureau/Ecoacoustic project internship/Acoustic-communities-process-internship/Temporal_distance_measures_project/OUTPUTS")
+
+final.BEAR.dur <- final.BEARAV$duration
+write.csv(x=final.BEAR.dur, file="SES_BEARAV_duration.csv")
+
+
+if (!("SES_BEARAV_duration.csv" %in% list.files())){write.csv(final.BEAR.dur,file="SES_BEARAV_duration.csv")}
+if (!("SES_BEARAV_dom_freq.csv" %in% list.files())){write.csv(final.BEARAV$dom_freq,file="SES_BEARAV_dom_freq.csv")}
+if (!("SES_VILOAM_duration.csv" %in% list.files())){write.csv(final.VILOAM$duration,file="SES_VILOAM_duration.csv")}
+if (!("SES_VILOAM_dom_freq.csv" %in% list.files())){write.csv(final.VILOAM$dom_freq,file="SES_VILOAM_dom_freq.csv")}
+
 
