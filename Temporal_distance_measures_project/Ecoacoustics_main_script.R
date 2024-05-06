@@ -243,3 +243,19 @@ ggplot(ggdata, aes(x = value)) +
   theme(plot.title = element_text(hjust = 0.5))
 
 
+#Boxplots with scaled values-----------------------------------------------------------------
+Acous.interest <- Acous.scaled[Acous.scaled$site=="BEARAV" | Acous.scaled$site=="VILOAM",]
+
+Acous.m = melt(Acous.interest[,c("site","duration","dom_freq")], id.vars="site")
+Acous.m$site = factor(Acous.m$site, levels=c("BEARAV", "VILOAM"))
+tr_names = c(duration = "Duration",
+             dom_freq ="Dominant frequency")
+Acous.m = Acous.m %>% mutate(variable = recode(variable, !!!tr_names))
+# If you want the two levels of event plotted side by side
+ggplot(Acous.m, aes(site, value, color=site)) +
+  facet_grid(. ~ variable) +
+  geom_boxplot(width=0.7, show.legend = FALSE)+
+  labs(x= "Site", y= "Scaled value", fill = "Acoustic traits", title= "Distribution of each trait for BEARAV and VILOAM")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5))
+
