@@ -354,3 +354,36 @@ annotate_figure(p_all, top = text_grob("Acoustic distance according to temporal 
                                        face = "bold", 
                                        size = 14))
 
+####Get coefficients for each LM--------------------------------------------------------------
+get_coef <- function(SES.table, site, trait){
+  
+  df_before <- SES.table[SES.table$L==c(-4:0),]
+  df_after <- SES.table[SES.table$L==c(0:4),]
+  
+  model_before <- lm(SES ~ L, data=df_before)
+  model_after <- lm(SES ~ L, data=df_after)
+ 
+  coef_before <- as.data.frame(cbind(Trait= c(trait,trait), 
+                                     Site=c(site, site), 
+                                     Position=c("Before","Before"), 
+                                     Coefficient=c("Intercept","Slope"), 
+                                     round(coef(summary(model_before))[,c(1,4)], 4)))
+  coef_after <- as.data.frame(cbind(Trait= c(trait,trait), 
+                                    Site=c(site, site), 
+                                    Position=c("After","After"), 
+                                    Coefficient=c("Intercept","Slope"), 
+                                    round(coef(summary(model_after))[,c(1,4)],4)))
+  
+  coef_site_trait <- rbind(coef_before, coef_after)
+  row.names(coef_site_trait) <- 1:4
+  
+  return(coef_site_trait)
+}
+
+coef_dur <- rbind(get_coef(SES.BEARAV.dur, "BEARAV", "Duration"), get_coef(SES.VILOAM.dur, "VILOAM", "Duration"))
+coef_dom_freq <- rbind(get_coef(SES.BEARAV.dom_freq, "BEARAV", "Dominant frequency"), get_coef(SES.VILOAM.dom_freq, "VILOAM", "Dominant frequency"))
+coef_all <- rbind(coef_dur,coef_dom_freq)
+coef_all.grob <- tableGrob(coef_dom_freq, row=NULL, theme=t1)
+
+plot(tableGrob(coef_all.grob, row=NULL))
+
