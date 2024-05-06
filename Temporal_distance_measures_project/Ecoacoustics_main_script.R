@@ -259,3 +259,38 @@ ggplot(Acous.m, aes(site, value, color=site)) +
   theme_bw()+
   theme(plot.title = element_text(hjust = 0.5))
 
+#Boxplots with values not scaled -------------------------------------------------------------
+
+Acous.traits.ns <- subset(Acous.measures, select = -c(id) )
+Acous.traits.ns <- aggregate(.~sound_type, data=Acous.traits.ns, mean) #get mean trait for each sound type
+Acous.traits.ns$sound_type <- lapply(Acous.traits.ns$sound_type, formatC, digits=2,flag="0")
+rownames(Acous.traits.ns) = Acous.traits.ns$sound_type
+
+values.ns = foreach(tr=c("duration","dom_freq"), .combine=cbind)%do%{
+  trait.scaled = foreach(st=Acous.info$type, .combine=rbind)%do%{
+    Acous.traits.ns[st,tr]
+  }
+  names(trait.scaled) <- tr
+  return(trait.scaled)
+}
+values.ns <- as.data.frame(values.ns)
+names(values.ns) <- c("duration","dom_freq")
+Acous.ns <- cbind(Acous.info, values.ns)
+
+Acous.interest.ns <- Acous.ns[Acous.ns$site=="BEARAV" | Acous.ns$site=="VILOAM",]
+
+Acous.m.ns = melt(Acous.interest.ns[,c("site","duration","dom_freq")], id.vars="site")
+Acous.m.ns$site = factor(Acous.m.ns$site, levels=c("BEARAV", "VILOAM"))
+tr_names = c(duration = "Duration (s)",
+             dom_freq ="Dominant frequency (Hz)")
+Acous.m.ns = Acous.m.ns %>% mutate(variable = recode(variable, !!!tr_names))
+# If you want the two levels of event plotted side by side
+ggplot(Acous.m.ns, aes(site, value, color=site)) +
+  ggh4x::facet_grid2(. ~ variable, scales="free_y", independent="y") +
+  geom_boxplot(width=0.7, show.legend = FALSE)+
+  labs(x= "Site", y= "Unscaled value", fill = "Acoustic traits", title= "Distribution of each trait for BEARAV and VILOAM")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
