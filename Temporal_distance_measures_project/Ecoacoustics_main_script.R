@@ -155,7 +155,13 @@ rownames(list.acouscomrand) = list.acouscomrand$Obs
 
 ## D. Compute SES for each site ---------------------------------------------
 
-##tests with BEARAV
+#####DO NOT RUN EXCEPT FOR TESTS (MIGHT TAKE TIME) ######################################################
+# test.Neigh <- FUN1_getNeigh(Acous.releves, site, date, no.neigh)
+# new.Neigh <- FUN2_getAcousMetrics(test.Neigh, traits, list.acousdist, list.acouspool)
+# test.Rand <- fun_getRandAcousComm(new.Neigh, traits, list.acouscomrand, no.rand, list.acouspool)
+# test.SES <- FUN_calcSes(test.Rand)
+#########################################################################################################
+
 traits <- c("duration","dom_freq")
 channel = "left"
 site = "BEARAV"
