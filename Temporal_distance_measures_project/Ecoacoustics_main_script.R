@@ -2,7 +2,10 @@
 ## Set-up ----
 options(digits = 15, dplyr.summarise.inform = FALSE)
 Sys.setlocale("LC_ALL", "C")
+#Setwd where all the functions are
 setwd("C:/Users/cobod/OneDrive/Bureau/Ecoacoustic project internship/Acoustic-communities-process-internship/Temporal_distance_measures_project") 
+
+#path to where the folders for each site are 
 path <- "C:/Users/cobod/OneDrive/Bureau/Master BEE MNHN/Stage M1 Ecoacoustique/Données/files/"
 site <- c('BEARAV', 'GRANAM', 'MOIRAM', 'MORTCE', 'ROSSAM', 'VILOAM')
 channel <- c('left', 'right')
@@ -20,23 +23,19 @@ channel <- c('left', 'right')
   library(LambertW) ## Gaussianize
   library(heatmaply) ## normalize
   
+  library(scales)
   library(ggplot2)
   library(patchwork)
   library(corrplot)
+  library(ggpubr)
+  library(grid)
+  library(gridExtra)
 }
 
 ## Source functions ----
 source("C:/Users/cobod/OneDrive/Bureau/Ecoacoustic project internship/Acoustic-communities-process-internship/Temporal_distance_measures_project/Ecoac_functions_prepare_data.R", echo=TRUE)
 source("C:/Users/cobod/OneDrive/Bureau/Ecoacoustic project internship/Acoustic-communities-process-internship/Temporal_distance_measures_project/Ecoac_functions_runAnalysis.R", echo=TRUE)
 source("C:/Users/cobod/OneDrive/Bureau/Ecoacoustic project internship/Acoustic-communities-process-internship/Temporal_distance_measures_project/Ecoac_functions_workflow.R", echo=TRUE)
-
-## Create the output folders ----
-folders = c("OUTPUTS")
-for(i in folders){
-  if(!dir.exists(i)){
-    dir.create(i)
-  }
-}
 
 #############################################################################################################
 ## I. PREPARATION OF DATA
@@ -53,7 +52,7 @@ Acous.traits <- subset(Acous.measures, select = -c(id) )
 Acous.traits <- aggregate(.~sound_type, data=Acous.traits, mean) #get mean trait for each sound type
 Acous.traits$sound_type <- lapply(Acous.traits$sound_type, formatC, digits=2,flag="0")
 
-## Get soundtype n� in traits
+## Get soundtype n° in traits
 tr.st_names = unique(Acous.traits$sound_type)
 tr.st_no = length(tr.st_names)
 
@@ -84,7 +83,8 @@ ggplot(ggdata, aes(x = value)) +
   geom_histogram(alpha = 0.5) +
   theme_bw() +
   xlab("Log-transformed and scaled trait values") +
-  labs(fill = "Acoustic traits")
+  labs(fill = "Acoustic traits" , title= "Distribution within soundtype pool")+
+  theme(plot.title = element_text(hjust = 0.5))
 
 res = Acous.traits[, names(tr_names)] %>% drop_na()
 corrplot(cor(res))
@@ -94,9 +94,9 @@ corrplot(cor(res))
 # For each focal and neighbor, we will later call these differences.
 for (tr in traits_names){
   df = as.data.frame(Acous.traits[, tr, drop = FALSE]) #df with only one trait (one column) with species names as index (keeps only one trait in Acous.traits)
-  dist_tr = outer(df[, 1], df[, 1], "-") #outputs a data frame resulting of the difference between all species (all combinations possible)
+  dist_tr = outer(df[, 1], df[, 1], "-") #outputs a data frame resulting of the difference between all soundtypes (all combinations possible)
   colnames(dist_tr) = rownames(dist_tr) = rownames(df)
-  assign(x = paste0("dist", tr), value = dist_tr) #each distTRAIT for ex: distSLA, get assigned the distance df for this trait
+  assign(x = paste0("dist", tr), value = dist_tr) #each distTRAIT for ex: distduration, get assigned the distance df for this trait
 }
 
 ## Gather all distances
