@@ -387,3 +387,25 @@ coef_all.grob <- tableGrob(coef_dom_freq, row=NULL, theme=t1)
 
 plot(tableGrob(coef_all.grob, row=NULL))
 
+#functions to change cell colors (DOESN'T WORK FOR NOW)
+# find_cells <- function(table, row, col, name="core-fg"){
+#   l <- table$layout
+#   l <- l[(l$t-1)%in%row,]
+#   which(((l$t-1) %in% row) & (l$l %in% col) & (l$name == name))
+# }
+# 
+# modify_cells <- function(g, ids, gp=gpar()){
+#   for(id in ids) g$grobs[id][[1]][["gp"]] <- gp
+#   return(g)
+# }
+# 
+# l=coef_all.grob$layout
+# 
+# ids.BEARAV <- find_cells(coef_all.grob, 1:4, 2:6, "core-fg")
+# g <- modify_cells(coef_all.grob, ids.BEARAV, gpar(fontsize=15, fontface="bold"))
+# grid.draw(g)
+# 
+# 
+# t1 <- ttheme_default(core=list(
+#   bg_params = list(fill="#6BAED6")
+# ))
