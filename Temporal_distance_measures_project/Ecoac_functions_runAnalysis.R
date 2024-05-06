@@ -1,13 +1,12 @@
 ## YES Function to create the random neighborhoods for each focal indvidual given the list.comrand and get differences and means
 fun_getRandAcousComm = function(neighdf, traits, list.acouscomrand, no.rand, list.acouspool)
 {
-  
+  acouscomrand = list.acouscomrand #randomized pool 
+  rownames(acouscomrand) <- acouscomrand[, "Obs"]
   ## Get OBSERVED focal and neighbor soundtype in the initial releve
   Null_comMeans <- foreach(tr.dim= traits)%do%
     {
       Null_comMetrics = NULL
-      acouscomrand = list.acouscomrand[[tr.dim]] #list of randomized pool for one trait
-      rownames(acouscomrand) <- acouscomrand[, "Obs"]
       tr.df = neighdf[neighdf$fst!=neighdf$nst ,c("fh","nh","L","fst","nst", paste0("Obs_dist_", tr.dim))]
       colnames(tr.df)[colnames(tr.df)==paste0("Obs_dist_", tr.dim)] <- "Obs_dist"
       list.names <-c(colnames(tr.df), 'Null_mean_all', 'Null_sd_all')
