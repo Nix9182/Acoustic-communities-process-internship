@@ -326,3 +326,31 @@ p_VILOAM_dom_freq <- ggplot(SES.VILOAM.dom_freq, aes(x=L, y=SES))+
 ggarrange(p_BEARAV_dur,p_VILOAM_dur,p_BEARAV_dom_freq,p_VILOAM_dom_freq, nrow = 2, ncol = 2)
 
 
+############ plot regressions----------------------------------------------------------------
+
+
+FUN_plotReg = function(SES.table, trait){
+  
+  df_before <- SES.table[SES.table$L==c(-4:0),]
+  df_after <- SES.table[SES.table$L==c(0:4),]
+  
+  p_trait <- ggplot()+
+    geom_smooth(data=df_before, aes(x=L, y=SES, color=site, fill=site), method='lm', se= TRUE)+
+    geom_smooth(data=df_after, aes(x=L, y=SES, color=site, fill=site), method='lm', se= TRUE)
+  
+  p_trait+ ggtitle(trait) +
+     labs(x="Temporal distance (Hour)", y= "Acoustic distance (SES)")+
+     theme_bw()+
+     theme(plot.title = element_text(hjust = 0.5))
+}
+
+ggplot(SES.all.dur, aes(x=site, y=SES))+
+  geom_boxplot()
+
+plot.duration <- FUN_plotReg(SES.all.dur, "Duration")
+plot.dom_freq <- FUN_plotReg(SES.all.dom_freq, "Dominant frequency")
+p_all <- ggarrange(plot.duration,plot.dom_freq, ncol=2, common.legend=TRUE, legend="bottom")
+annotate_figure(p_all, top = text_grob("Acoustic distance according to temporal distance (50 null communities)", 
+                                       face = "bold", 
+                                       size = 14))
+
